@@ -7,7 +7,12 @@ using UnityEngine;
 public class CompositeBehavior : FlockBehavior
 {
     public FlockBehavior[] behaviors;
-    public float[] weights; 
+
+    [Range(0f, 10f)]
+    public float[] weights;
+
+    [SerializeField]
+    changeWeights m_changeWeights; 
 
     public override Vector2 CalculateMove(FlockAgent agent, List<Transform> context, Flock flock)
     {
@@ -35,8 +40,30 @@ public class CompositeBehavior : FlockBehavior
             }
         }
         return move; 
-        
-
+       
     }
 
+    void Start()
+    {
+        m_changeWeights = GameObject.Find("Flock").GetComponent<changeWeights>();
+    }
+
+void Update()
+    {
+        weights[0] = m_changeWeights.getCohesionWeights();
+        Debug.Log(weights[0]);
+        m_changeWeights.changeCohesionWeights(weights[0]);
+
+        weights[2] = m_changeWeights.getAlignmentWeights();
+        Debug.Log(weights[2]);
+        m_changeWeights.changeAlignmentWeights(weights[2]);
+
+        weights[1] = m_changeWeights.getSeparationWeights();
+        Debug.Log(weights[1]);
+        m_changeWeights.changeSeparationWeights(weights[1]);
+    }
+
+
+
 }
+
